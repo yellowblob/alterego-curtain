@@ -3,7 +3,7 @@
 byte mac[] = {
   0xA8, 0x61, 0x0A, 0xAE, 0x88, 0xFE
 };
-const IPAddress ip(192, 168, 178, 150);  // IP of your board
+const IPAddress ip(192, 168, 1, 133);  // IP of your board
   // IP of Control PC
 const IPAddress eosIp(192, 168, 178, 30);
 const IPAddress ledPlayerIp(192, 168, 178, 210);
