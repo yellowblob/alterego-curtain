@@ -4,7 +4,7 @@
 #include <Ethernet.h>
 #include <EthernetUdp.h>
 
-EthernetUDP Udp; 
+EthernetUDP Udp;
 int powerPin1 = 2;
 int directionPin1 = 3;
 
@@ -27,31 +27,30 @@ void loop() {
     int state = Serial.parseInt();
     digitalWrite(pin, state);
   }
-  
-   OSCMessage msg;
-   int size;
 
-   if( (size = Udp.parsePacket())>0)
-   {
+  OSCMessage msg;
+  int size;
 
-      //store sender IP
-     remoteIp = Udp.remoteIP();
-     Serial.println(remoteIp);
-     
-     Serial.println("Message");
-     while(size--){
-       msg.fill(Udp.read());
-     }
+  if ((size = Udp.parsePacket()) > 0) {
+
+    //store sender IP
+    remoteIp = Udp.remoteIP();
+    Serial.println(remoteIp);
+
+    Serial.println("Message");
+    while (size--) {
+      msg.fill(Udp.read());
+    }
 
     //Serial.println(msg.hasError());
-      if(!msg.hasError()){
-        
-        msg.route("/front/stop", frontStop);
-        msg.route("/front/open", frontOpen);
-        msg.route("/front/close", frontClose);
-        msg.route("/ping", pingback);
-        msg.route("/enlight", enlight);
-        msg.route("/setPin", setPinValue);
-      }
-   }
+    if (!msg.hasError()) {
+
+      msg.route("/front/stop", frontStop);
+      msg.route("/front/open", frontOpen);
+      msg.route("/front/close", frontClose);
+      msg.route("/ping", pingback);
+      msg.route("/enlight", enlight);
+      msg.route("/setPin", setPinValue);
+    }
+  }
 }
