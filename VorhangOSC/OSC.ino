@@ -68,7 +68,7 @@ void setPinValue(OSCMessage &msg){
     Serial.print(pin);
     Serial.print(" ");
     if (msg.isInt(1)){
-      int state = msg.isInt(1);
+      int state = msg.getInt(1);
       Serial.println(state);
       digitalWrite(pin, state);
     } 
