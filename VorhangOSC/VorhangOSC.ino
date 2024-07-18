@@ -10,6 +10,8 @@ int directionPin1 = 3;
 
 EthernetClient client;
 
+IPAddress remoteIp;
+
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
@@ -31,6 +33,11 @@ void loop() {
 
    if( (size = Udp.parsePacket())>0)
    {
+
+      //store sender IP
+     remoteIp = Udp.remoteIP();
+     Serial.println(remoteIp);
+     
      Serial.println("Message");
      while(size--){
        msg.fill(Udp.read());
