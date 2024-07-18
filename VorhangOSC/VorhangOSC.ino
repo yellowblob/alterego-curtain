@@ -46,6 +46,9 @@ void loop() {
     //Serial.println(msg.hasError());
       if(!msg.hasError()){
         
+        msg.route("/front/stop", frontStop);
+        msg.route("/front/open", frontOpen);
+        msg.route("/front/close", frontClose);
         msg.route("/ping", pingback);
         msg.route("/enlight", enlight);
         msg.route("/setPin", setPinValue);

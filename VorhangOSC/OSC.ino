@@ -11,6 +11,8 @@ const unsigned int outPort = 7000;          // remote port to receive OSC
 const unsigned int localPort = 9000;        // local port to listen for OSC packets (actually not used for sending)
 const unsigned int ledPlayerPort = 5000;  
 
+bool frontPower = false;
+
 void initializeOSC() {
 
     // Connect to WiFi network
@@ -79,8 +81,37 @@ void pingback(OSCMessage &msg){
    Serial.print("received package: ");
    OSCMessage outMsg("/curtain/ping");
    outMsg.add(true);
-   Udp.beginPacket(eosIp, outPort);
+   Udp.beginPacket(remoteIp, outPort);
    outMsg.send(Udp); // send the bytes to the SLIP stream
    Udp.endPacket(); // mark the end of the OSC Packet
    outMsg.empty(); // free space occupied by message
+}
+
+void setFrontPower(bool state) {
+  frontPower = state;
+  digitalWrite(powerPin1, state);
+}
+
+void setFrontDirection(bool dir) {
+  digitalWrite(directionPin1, dir);
+}
+
+void frontOpen(OSCMessage &msg){
+  setFrontPower(false);
+  delay(100);
+  setFrontDirection(true);
+  delay(100);
+  setFrontPower(true);
+}
+
+void frontClose(OSCMessage &msg){
+  setFrontPower(false);
+  delay(100);
+  setFrontDirection(false);
+  delay(100);
+  setFrontPower(true);
+}
+
+void frontStop(OSCMessage &msg){
+  setFrontPower(false);
 }
