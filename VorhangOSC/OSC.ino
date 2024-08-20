@@ -5,13 +5,13 @@ byte mac[] = {
 };
 const IPAddress ip(192, 168, 1, 133);  // IP of your board
   // IP of Control PC
-const IPAddress eosIp(192, 168, 178, 30);
-const IPAddress ledPlayerIp(192, 168, 178, 210);
+const IPAddress outIp(192, 168, 178, 30);
 const unsigned int outPort = 7000;    // remote port to receive OSC
 const unsigned int localPort = 9000;  // local port to listen for OSC packets (actually not used for sending)
-const unsigned int ledPlayerPort = 5000;
 
 bool frontPower = false;
+bool backPower = false;
+
 
 void initializeOSC() {
 
@@ -42,14 +42,14 @@ void initializeOSC() {
 void sendOSC(char address[], int value) {
   OSCMessage msg(address);
   msg.add(value);
-  Udp.beginPacket(eosIp, outPort);
+  Udp.beginPacket(outIp, outPort);
   msg.send(Udp);
   Udp.endPacket();
   msg.empty();
 }
 
 void sendUDP(char message[]) {
-  Udp.beginPacket(ledPlayerIp, ledPlayerPort);
+  Udp.beginPacket(outIp, outPort);
   Udp.write(message);
   Udp.endPacket();
 }
@@ -81,7 +81,7 @@ void pingback(OSCMessage &msg) {
   Serial.print("received package: ");
   OSCMessage outMsg("/curtain/ping");
   outMsg.add(true);
-  Udp.beginPacket(remoteIp, outPort);
+  Udp.beginPacket(outIp, outPort);
   outMsg.send(Udp);  // send the bytes to the SLIP stream
   Udp.endPacket();   // mark the end of the OSC Packet
   outMsg.empty();    // free space occupied by message
@@ -114,4 +114,33 @@ void frontClose(OSCMessage &msg) {
 
 void frontStop(OSCMessage &msg) {
   setFrontPower(false);
+}
+
+void setBackPower(bool state) {
+  backPower = state;
+  digitalWrite(powerPin2, state);
+}
+
+void setBackDirection(bool dir) {
+  digitalWrite(directionPin2, dir);
+}
+
+void backOpen(OSCMessage &msg) {
+  setBackPower(false);
+  delay(100);
+  setBackDirection(false);
+  delay(100);
+  setBackPower(true);
+}
+
+void backClose(OSCMessage &msg) {
+  setBackPower(false);
+  delay(100);
+  setBackDirection(true);
+  delay(100);
+  setBackPower(true);
+}
+
+void backStop(OSCMessage &msg) {
+  setBackPower(false);
 }

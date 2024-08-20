@@ -7,6 +7,8 @@
 EthernetUDP Udp;
 int powerPin1 = 2;
 int directionPin1 = 3;
+int powerPin2 = 4;
+int directionPin2 = 5;
 
 EthernetClient client;
 
@@ -19,6 +21,8 @@ void setup() {
   initializeOSC();
   pinMode(powerPin1, OUTPUT);
   pinMode(directionPin1, OUTPUT);
+  pinMode(powerPin2, OUTPUT);
+  pinMode(directionPin2, OUTPUT);
 }
 
 void loop() {
@@ -48,6 +52,9 @@ void loop() {
       msg.route("/front/stop", frontStop);
       msg.route("/front/open", frontOpen);
       msg.route("/front/close", frontClose);
+      msg.route("/back/stop", backStop);
+      msg.route("/back/open", backOpen);
+      msg.route("/back/close", backClose);
       msg.route("/ping", pingback);
       msg.route("/enlight", enlight);
       msg.route("/setPin", setPinValue);
